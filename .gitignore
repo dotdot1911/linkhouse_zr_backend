@@ -7,6 +7,9 @@
 /public/bundles/
 /var/
 /vendor/
+/.idea/
+/compose.override.yaml
+/compose.yaml
 ###< symfony/framework-bundle ###
 
 ###> phpunit/phpunit ###
