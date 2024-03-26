@@ -5,10 +5,8 @@ namespace App\Controller;
 use App\Service\ArticleService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Serializer\Encoder\JsonEncoder;
-use Symfony\Component\Serializer\SerializerInterface;
 
 
 class ArticlesController extends AbstractController
@@ -21,16 +19,31 @@ class ArticlesController extends AbstractController
     }
 
     #[Route('/articles', name: 'app_articles')]
-    public function indexAction(): JsonResponse
+    public function indexAction(Request $request): JsonResponse
     {
-        $articleList = $this->articleService->getArticlesListFromXML("https://linkhouse.pl/feed/");
+        $lang = $request->query->get('lang');
+        if ($lang == "en")
+        {
+            $articleList = $this->articleService->getArticlesListFromXML("https://linkhouse.net/feed/");
+        }
+        else
+        {
+            $articleList = $this->articleService->getArticlesListFromXML("https://linkhouse.pl/feed/");
+        }
+        
         return $this->json($articleList);
     }
 
     #[Route('/article/{guid}', name: 'app_article')]
-    public function detailsAction(string $guid): JsonResponse
+    public function detailsAction(Request $request, string $guid): JsonResponse
     {
-        $article = $this->articleService->getArticleFromXML("https://linkhouse.pl/feed/", $guid);
+        $lang = $request->query->get('lang');
+        if ($lang == "en") {
+            $article = $this->articleService->getArticleFromXML("https://linkhouse.net/feed/", $guid);
+        }
+        else {
+            $article = $this->articleService->getArticleFromXML("https://linkhouse.pl/feed/", $guid);
+        }
         return $this->json($article);
     }
 }

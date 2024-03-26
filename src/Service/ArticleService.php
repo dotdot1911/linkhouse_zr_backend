@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Entity\ArticleList;
 use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
 use App\Entity\Article;
@@ -28,12 +29,11 @@ class ArticleService
                 foreach ($item->category as $itemCategory) {
                     $categoryArray[] = (string)$itemCategory;
                 }
-                $articleArray[] = new Article((string)$item->title, (string)$item->link, (string)$item->pubDate, $categoryArray, (string)$item->guid, (string)$item->description);
+                $articleArray[] = new ArticleList((string)$item->guid, (string)$item->title, (string)$item->pubDate, $categoryArray);
                 $categoryArray = [];
             } catch (InvalidArgumentException $e) {
                 $this->logger->warning($e->getMessage() . "\n");
             }
-
         }
         return $articleArray;
     }
@@ -50,7 +50,7 @@ class ArticleService
                     foreach ($item->category as $itemCategory) {
                         $categoryArray[] = (string)$itemCategory;
                     }
-                    return new Article((string)$item->title, (string)$item->link, (string)$item->pubDate, $categoryArray, (string)$item->guid, (string)$item->description);
+                    return new Article((string)$item->guid, (string)$item->title, (string)$item->link, (string)$item->description, $categoryArray);
                 }
             } catch (InvalidArgumentException $e) {
                 $this->logger->warning($e->getMessage() . "\n");

@@ -5,28 +5,25 @@ namespace App\Entity;
 use DateTime;
 use InvalidArgumentException;
 
-class Article
+class ArticleList
 {
     private string $guid;
     private string $title;
-    private string $link;
-    private string $description;
+    private string $pubDate;
     private array $category;
 
 
     /**
      * @param string $guid
      * @param string $title
-     * @param string $link
-     * @param string $description
+     * @param string $pubDate
      * @param array $category
      */
-    public function __construct(string $guid, string $title, string $link, string $description, array $category)
+    public function __construct(string $guid, string $title, string $pubDate, array $category)
     {
         preg_match('/(?<=p=)\d+/', $guid, $match) ? $this->guid = $match[0] : throw new InvalidArgumentException("Wrong guid");
         $this->title = $title;
-        $this->link = $link;
-        $this->description = $description;
+        $this->pubDate = DateTime::createFromFormat('D, d M Y H:i:s O', $pubDate)->format('Y-m-d H:i:s');
         $this->category = $category;
     }
 
@@ -40,14 +37,9 @@ class Article
         return $this->title;
     }
 
-    public function getLink(): string
+    public function getPubDate(): string
     {
-        return $this->link;
-    }
-
-    public function getDescription(): string
-    {
-        return $this->description;
+        return $this->pubDate;
     }
 
     public function getCategory(): array
